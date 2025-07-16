@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora R/B - Futuros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label, input {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+        input[type="number"] {
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            width: 100%;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .resultado {
+            margin-top: 20px;
+            font-weight: bold;
+            background-color: #e9ffe9;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Calculadora de futuros (R/B)</h2>
+    <label>Precio de entrada:
+        <input type="number" id="entrada" step="0.00001">
+    </label>
+    <label>Precio de salida (SL):
+        <input type="number" id="salida" step="0.00001">
+    </label>
+    <label>Cantidad de contratos:
+        <input type="number" id="contratos">
+    </label>
+    <label>R/B:
+        <input type="number" id="rb" step="0.1">
+    </label>
+    <button onclick="calcular()">Calcular</button>
+    <div id="riesgo" class="resultado"></div>
+    <div id="beneficio" class="resultado"></div>
+    <div id="tp" class="resultado"></div>
+</div>
+
+<script>
+    function calcular() {
+        const entrada = parseFloat(document.getElementById('entrada').value);
+        const sl = parseFloat(document.getElementById('salida').value);
+        const contratos = parseInt(document.getElementById('contratos').value);
+        const rb = parseFloat(document.getElementById('rb').value);
+
+        if (isNaN(entrada) || isNaN(sl) || isNaN(contratos) || isNaN(rb)) {
+            alert("Por favor, completa todos los campos correctamente.");
+            return;
+        }
+
+        const A = 6.25 * contratos;
+        const diferencia = Math.abs(entrada - sl);
+        const riesgo = (diferencia / 0.00005) * A;
+        const beneficio = (diferencia / 0.00005) * rb * 6.25;
+
+        let tp;
+        const ticks = diferencia / 0.00005;
+        const movimiento = ticks * rb * 0.00005;
+
+        if (entrada > sl) {
+            tp = entrada + movimiento;
+        } else {
+            tp = entrada - movimiento;
+        }
+
+        document.getElementById('riesgo').textContent = "Dinero en riesgo: $" + riesgo.toFixed(2);
+        document.getElementById('beneficio').textContent = "Beneficio esperado: $" + beneficio.toFixed(2);
+        document.getElementById('tp').textContent = "Precio de salida (TP): " + tp.toFixed(5);
+    }
+</script>
+</body>
+</html>
