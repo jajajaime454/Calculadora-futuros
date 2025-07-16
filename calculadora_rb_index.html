@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora R/B</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f0f4f8;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Calculadora de Riesgo / Beneficio</h2>
+
+  <label for="entrada">Precio de entrada:</label>
+  <input type="number" id="entrada" step="0.00001">
+
+  <label for="salida">Precio de salida:</label>
+  <input type="number" id="salida" step="0.00001">
+
+  <label for="contratos">Cantidad de contratos:</label>
+  <input type="number" id="contratos" min="1">
+
+  <label for="rb">R/B:</label>
+  <input type="number" id="rb" step="0.01">
+
+  <button onclick="calcular()">Calcular</button>
+
+  <div class="result" id="riesgo"></div>
+  <div class="result" id="beneficio"></div>
+
+  <script>
+    function calcular() {
+      const entrada = parseFloat(document.getElementById('entrada').value);
+      const salida = parseFloat(document.getElementById('salida').value);
+      const contratos = parseInt(document.getElementById('contratos').value);
+      const rb = parseFloat(document.getElementById('rb').value);
+
+      if (isNaN(entrada) || isNaN(salida) || isNaN(contratos) || isNaN(rb)) {
+        alert("Por favor, llena todos los campos correctamente.");
+        return;
+      }
+
+      const A = 6.25 * contratos;
+      const riesgo = (Math.abs(entrada - salida) / 0.00005) * A;
+      const beneficio = ((entrada * rb) / 0.00005) * A;
+
+      document.getElementById('riesgo').textContent = `Dinero en riesgo: $${riesgo.toFixed(2)}`;
+      document.getElementById('beneficio').textContent = `Beneficio esperado: $${beneficio.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>
